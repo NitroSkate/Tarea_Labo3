@@ -26,7 +26,7 @@ public class ProductController {
 		productos.add(new Product(3, "COD", 8));
 		productos.add(new Product(4, "ASPHALT9", 20));
 		
-		mav.setViewName("select");
+		mav.setViewName("index");
 		mav.addObject("product", new Product());
 		mav.addObject("producto", productos);
 		return mav;
@@ -34,8 +34,17 @@ public class ProductController {
 	
 	@PostMapping("/validar")
 	@ResponseBody
-	public String validar(Product product) {
-		return productos.get(product.getId()).getNombre();
+	public ModelAndView validar(Product product) {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("resultado");
+		if(productos.get(product.getId()).getCantidad() >= product.getCantidad()) {
+			mav.addObject("resultado", "Has comprado el juego " + productos.get(product.getId()).getNombre() + " con exito!");
+			return mav;
+		}
+		mav.addObject("resultado", "Se han acabado las existencias del juego. \n"
+				+ "Solo existen " + productos.get(product.getId()).getCantidad() + " copias."
+				);
+		return mav;
 	}
 	
 }
